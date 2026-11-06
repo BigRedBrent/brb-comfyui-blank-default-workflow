@@ -1,6 +1,6 @@
 [project]
 name = "brb-comfyui-blank-default-workflow"
-version = "1.0.0"
+version = "1.0.1"
 description = "Makes ComfyUI's default workflow blank, so closing the last tab or starting ComfyUI with no tabs opens an empty workflow instead of the default Load Checkpoint and KSampler setup. Doesn't change any ComfyUI files, so updates don't undo it."
 license = { file = "LICENSE" }
 

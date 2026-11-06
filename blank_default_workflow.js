@@ -36,12 +36,16 @@ function isBuiltInDefault(graphData) {
 app.registerExtension({
     name: "BRB.BlankDefaultWorkflow",
     async setup() {
-        // Every workflow ComfyUI opens goes through loadGraphData. When it's opening its default workflow, either
-        // by passing nothing or by passing the built-in default, it gets an empty workflow instead.
+        // Every workflow ComfyUI opens goes through loadGraphData. When ComfyUI opens its default workflow by
+        // itself, after the last tab is closed or at startup, it passes either nothing, or only the built-in
+        // default, which has no ID. That gets an empty workflow instead. A default workflow opened on purpose
+        // isn't touched: a dragged-in file comes with its file name, a template with more details, and a
+        // workflow from a saved file or the queue history with its own ID.
         const loadGraphData = app.loadGraphData;
         app.loadGraphData = function (graphData, ...rest) {
             const missing = !graphData || typeof graphData !== "object" || Array.isArray(graphData);
-            if (missing || isBuiltInDefault(graphData)) {
+            const builtIn = rest.length === 0 && !graphData?.id && isBuiltInDefault(graphData);
+            if (missing || builtIn) {
                 graphData = structuredClone(BLANK_WORKFLOW);
             }
             return loadGraphData.call(this, graphData, ...rest);
